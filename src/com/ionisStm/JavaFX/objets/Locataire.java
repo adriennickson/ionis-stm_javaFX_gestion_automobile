@@ -30,4 +30,8 @@ public class Locataire {
 		return "locataires [id=" + id + ", nomComplet=" + nomComplet + ", mail=" + mail + "]\n";
 	}
 	
+	public String serialize() {
+		return id+"\t"+nomComplet+"\t"+mail+"\n";
+	}
+	
 }

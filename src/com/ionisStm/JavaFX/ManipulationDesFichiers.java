@@ -10,18 +10,27 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ionisStm.JavaFX.objets.Locataire;
 
 public class ManipulationDesFichiers {
 
+	public static final String NOM_DU_DOSSIER = "/AgenceDeLocationDeVoiture";
+	static String path;
+	static {
+		path = System.getProperty("user.home") + NOM_DU_DOSSIER;		
+	}
+
+	public ManipulationDesFichiers() {
+	}
+
 	public void affiche(String fichier) {
 		try {
-			FileReader r = new FileReader(fichier);
+			FileReader r = new FileReader(path+fichier);
 			BufferedReader br = new BufferedReader(r);
 			String fileText = br.lines().collect(Collectors.joining());
-			System.out.println(fileText);	
 		    br.close();
 		    r.close();
 		} catch (FileNotFoundException e) {
@@ -32,14 +41,16 @@ public class ManipulationDesFichiers {
 
 	}
 
-	public static java.util.List<Locataire> toutesLesLignes(String fichier) {
-		java.util.List<Locataire> lignes = new ArrayList<Locataire>();
+	public static List<Object> toutesLesLignes(String fichier) {
+		java.util.List<Object> lignes = new ArrayList<Object>();
 		try {
-			FileReader r = new FileReader(fichier);
+			FileReader r = new FileReader(path + fichier);
 			BufferedReader br = new BufferedReader(r);
 		    for(String line; (line = br.readLine()) != null; ) {
 		    	String[] tab = line.split("\t"); 
-		    	lignes.add(new Locataire( Integer.parseInt(tab[0]), tab[1], tab[2]));
+		    	if (fichier.equals("/locataires.txt")) {
+			    	lignes.add(new Locataire( Integer.parseInt(tab[0]), tab[1], tab[2]));					
+				}
 		    }
 		    br.close();
 		    r.close();
@@ -54,7 +65,7 @@ public class ManipulationDesFichiers {
 	public void ecrireTexte(String fichier, String ligne) throws IOException{
 		BufferedWriter out = null;
 		try {	    	
-	    	out = new BufferedWriter(new FileWriter(fichier));
+	    	out = new BufferedWriter(new FileWriter(path+fichier));
 	        out.write(ligne);
 		} catch (UnsupportedEncodingException | FileNotFoundException e) {
 			e.printStackTrace();
@@ -68,9 +79,9 @@ public class ManipulationDesFichiers {
 	   
 	}
 	
-	public void ajouterUneLigne(String fichier, String ligne) {
+	public static void ajouterUneLigne(String fichier, String ligne) {
 	    try {	    	
-	    	BufferedWriter out = new BufferedWriter(new FileWriter(fichier, true));
+	    	BufferedWriter out = new BufferedWriter(new FileWriter(path+fichier, true));
 	        out.append(ligne);
 			out.close();
 		} catch (UnsupportedEncodingException | FileNotFoundException e) {
@@ -81,7 +92,29 @@ public class ManipulationDesFichiers {
 
 	}
 
-	public static void configurerLesFichiers(String path){
+	public static void supprimerUneLigne(String fichier, Object item) {
+		
+		List<Object> all = toutesLesLignes(fichier).stream().filter(e -> !e.toString().equals(item.toString())).collect(Collectors.toList());
+
+		try {	    	
+	    	BufferedWriter out = new BufferedWriter(new FileWriter(path+fichier));
+	    	all.forEach( e -> {
+				try {
+					out.append( ((Locataire) e).serialize() );
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			} );
+			out.close();
+		} catch (UnsupportedEncodingException | FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void configurerLesFichiers(){
 	    File directory = new File(path);
 	    if (! directory.exists()){
 	        directory.mkdir();
