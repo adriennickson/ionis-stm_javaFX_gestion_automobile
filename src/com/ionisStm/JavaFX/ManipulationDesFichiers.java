@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ionisStm.JavaFX.objets.Locataire;
+import com.ionisStm.JavaFX.objets.Voiture;
 
 public class ManipulationDesFichiers {
 
@@ -48,9 +49,10 @@ public class ManipulationDesFichiers {
 			BufferedReader br = new BufferedReader(r);
 		    for(String line; (line = br.readLine()) != null; ) {
 		    	String[] tab = line.split("\t"); 
-		    	if (fichier.equals("/locataires.txt")) {
+		    	if (fichier.equals("/locataires.txt"))
 			    	lignes.add(new Locataire( Integer.parseInt(tab[0]), tab[1], tab[2]));					
-				}
+		    	if (fichier.equals("/voitures.txt"))
+			    	lignes.add(new Voiture( Integer.parseInt(tab[0]), tab[1], tab[2], tab[3], Integer.parseInt(tab[4]), Integer.parseInt(tab[5])));					
 		    }
 		    br.close();
 		    r.close();
@@ -100,7 +102,10 @@ public class ManipulationDesFichiers {
 	    	BufferedWriter out = new BufferedWriter(new FileWriter(path+fichier));
 	    	all.forEach( e -> {
 				try {
-					out.append( ((Locataire) e).serialize() );
+			    	if (fichier.equals("/locataires.txt"))
+						out.append( ((Locataire) e).serialize() );
+			    	if (fichier.equals("/voitures.txt"))
+			    		out.append( ((Voiture) e).serialize() );
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}

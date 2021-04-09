@@ -27,7 +27,7 @@ public class Locataire {
 	
 	@Override
 	public String toString() {
-		return "locataires [id=" + id + ", nomComplet=" + nomComplet + ", mail=" + mail + "]\n";
+		return "Locataire [id=" + id + ", nomComplet=" + nomComplet + ", mail=" + mail + "]\n";
 	}
 	
 	public String serialize() {

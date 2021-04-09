@@ -51,6 +51,7 @@ public class TableauDesLocataires {
                         btnSupprimer.setOnAction((ActionEvent event) -> {
                         	Locataire data = getTableView().getItems().get(getIndex());
                             getTableView().getItems().remove(getIndex());
+                            //TODO: Vérifier si il n'y a pas de jointure
                             ManipulationDesFichiers.supprimerUneLigne("/locataires.txt", data);
                         });
                     }
@@ -61,7 +62,8 @@ public class TableauDesLocataires {
                         if (empty) {
                             setGraphic(null);
                         } else {
-                        	HBox bouttons = new HBox(btnVoir, btnSupprimer);
+                        	HBox bouttons = new HBox(btnSupprimer);
+                        	//HBox bouttons = new HBox(btnVoir, btnSupprimer);
                         	bouttons.setSpacing(5);
                         	setGraphic(bouttons);
                         }
